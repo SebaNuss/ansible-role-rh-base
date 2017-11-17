@@ -10,12 +10,19 @@
     - rhbase
     - security
 
-- name: Security | Enable SELinux booleans
+- name: Security | Enable selinux booleans
   seboolean:
     name: "{{ item }}"
     state: yes
     persistent: yes
   with_items: "{{ rhbase_selinux_booleans }}"
+  tags:
+    - rhbase
+    - security
+
+- name: Security | Run semodule file
+  shell: "semodule -i {{ item }}"
+  with_items: "{{ rhbase_semodule }}"
   tags:
     - rhbase
     - security
@@ -66,6 +73,7 @@
   tags:
     - rhbase
     - security
+
 - name: Security | Make sure specified interfaces are added
   firewalld:
     interface: "{{ item }}"
